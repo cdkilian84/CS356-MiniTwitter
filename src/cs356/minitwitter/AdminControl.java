@@ -10,22 +10,22 @@ package cs356.minitwitter;
  * @author Chris
  */
 public class AdminControl {
-    
+
     private static AdminControl theAdmin;
-	
-	private AdminControl() { 
-        
+
+    private AdminControl() {
+
+    }
+
+    public static AdminControl getInstance() {
+        if (theAdmin == null) {
+            synchronized (AdminControl.class) {
+                if (theAdmin == null) {
+                    theAdmin = new AdminControl();
+                }
+            }
         }
-	
-	public static AdminControl getInstance() {
-		if (theAdmin == null) {
-                    synchronized(AdminControl.class){
-                        if(theAdmin == null){
-                            theAdmin = new AdminControl();
-                        }
-                    }
-		}
-		return theAdmin;
-	}
+        return theAdmin;
+    }
 
 }
