@@ -23,4 +23,6 @@ public abstract class MiniTwitComponent {
     
     public abstract String getMyID();
     
+    public abstract boolean checkForUniqueID(String theID);
+    
 }

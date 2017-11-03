@@ -12,7 +12,7 @@ package cs356.minitwitter;
 public class User extends MiniTwitComponent {
 
     private String myID;
-    
+
     public User() {
     }
 
@@ -25,5 +25,16 @@ public class User extends MiniTwitComponent {
     public String getMyID() {
         return myID;
     }
-    
+
+    //check a user for unique ID by checking if the passed string is equal to myID
+    //Return true if the ID is unique, and false if the ID is not unique (or if the passed string is null)
+    @Override
+    public boolean checkForUniqueID(String theID) {
+        boolean checkFlag = true;
+        if ((theID == null) || theID.equals(myID)) {
+            checkFlag = false;
+        }
+        return checkFlag;
+    }
+
 }
