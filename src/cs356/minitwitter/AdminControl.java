@@ -12,7 +12,7 @@ package cs356.minitwitter;
 public class AdminControl {
 
     private static AdminControl theAdmin;
-    private MiniTwitComponent root; //the root object of the MiniTwitComponents, which will be a Group named "Root"
+    private MiniTwitComponent root; //the root object of the MiniTwitComponents, which will be a Group named "Root" - contains all other subgroups and users
 
     private AdminControl() {
         root = new Group("Root");

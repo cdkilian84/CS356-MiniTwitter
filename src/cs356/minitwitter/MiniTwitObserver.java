@@ -9,7 +9,6 @@ package cs356.minitwitter;
  *
  * @author Chris
  */
-public interface Observer {
-    public void addObserver(Observer theObserver);
-    public void notifyObservers();
+public interface MiniTwitObserver {
+    public void update(String theTweet);
 }
