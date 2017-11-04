@@ -44,10 +44,14 @@ public class Driver {
         test2.addUser(new User("Stevearino"));
         test2.addUser(new User("Roger"));
         controller.getRoot().addUser(new User("Nina"));
-        controller.getRoot().print();
+        
+        //controller.getRoot().print();
+        
         //for(MiniTwitComponent component : ((Group)controller.getRoot()).getMyList()){
         //    component.print();
         //}
+        
+        System.out.println(((Group)controller.getRoot()).checkForUniqueID("Cool People"));
         
     }
     

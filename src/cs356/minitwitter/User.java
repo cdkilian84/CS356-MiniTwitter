@@ -27,17 +27,8 @@ public class User extends MiniTwitComponent {
         return myID;
     }
 
-    //check a user for unique ID by checking if the passed string is equal to myID
-    //Return true if the ID is unique, and false if the ID is not unique (or if the passed string is null)
-    @Override
-    public boolean checkForUniqueID(String theID) {
-        boolean checkFlag = true;
-        if ((theID == null) || theID.equals(myID)) {
-            checkFlag = false;
-        }
-        return checkFlag;
-    }
     
+    //User object returns itself if it has a matching ID, and returns null otherwise
     @Override
     public MiniTwitComponent getChild(String findID) {
         MiniTwitComponent foundComponent = null;

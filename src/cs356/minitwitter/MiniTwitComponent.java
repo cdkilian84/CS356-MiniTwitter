@@ -21,13 +21,9 @@ public abstract class MiniTwitComponent {
         throw new UnsupportedOperationException();
     }
     
-    public MiniTwitComponent getChild(String findID){
-        throw new UnsupportedOperationException();
-    }
+    public abstract MiniTwitComponent getChild(String findID);
     
     public abstract String getMyID();
-    
-    public abstract boolean checkForUniqueID(String theID);
     
     //POSSIBLE TEMP FOR WORKING - CONSIDER REMOVING LATER
     public abstract void print();

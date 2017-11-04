@@ -37,23 +37,21 @@ public class Group extends MiniTwitComponent {
         return componentList;
     }
 
-    @Override
+    //convenience method for the "Group" class which uses getChild to check if the searched for ID
+    //is unique or not - if getChild returns a non-null value, then the ID string is not unique (is already in use)
+    //so return false. Else, return true.
     public boolean checkForUniqueID(String theID) {
         boolean checkFlag = true;
-        if (theID.equals(this.myID)) {
+        
+        if(this.getChild(theID) != null){
             checkFlag = false;
-        } else {
-            for (MiniTwitComponent component : componentList) {
-                if (!component.checkForUniqueID(theID)) {
-                    checkFlag = false;
-                    break;
-                }
-            }
         }
 
         return checkFlag;
     }
     
+    //Group object returns itself if its ID matches the searched for ID, or iterates through all of its children to find the
+    //searched for object otherwise. If none of the children match the searched ID either, return null.
     @Override
     public MiniTwitComponent getChild(String findID) {
         MiniTwitComponent foundComponent = null;
