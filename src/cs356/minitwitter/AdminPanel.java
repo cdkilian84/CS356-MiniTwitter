@@ -17,7 +17,7 @@ public class AdminPanel extends javax.swing.JPanel {
      */
     public AdminPanel() {
         initComponents();
-        controller.getInstance();
+        controller = AdminControl.getInstance();
     }
 
     /**

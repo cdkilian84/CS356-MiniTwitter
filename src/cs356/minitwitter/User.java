@@ -13,7 +13,8 @@ public class User extends MiniTwitComponent {
 
     private String myID;
 
-    public User() {
+    public User(String myID) {
+        this.myID = myID;
     }
 
     @Override
@@ -35,6 +36,20 @@ public class User extends MiniTwitComponent {
             checkFlag = false;
         }
         return checkFlag;
+    }
+    
+    @Override
+    public MiniTwitComponent getChild(String findID) {
+        MiniTwitComponent foundComponent = null;
+        if(findID.equals(this.myID)){
+            foundComponent = this;
+        }
+        return foundComponent;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("User: " + this.myID);
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public class Group extends MiniTwitComponent {
 
     private String myID;
-    List<MiniTwitComponent> componentList;
+    private List<MiniTwitComponent> componentList;
 
     public Group(String myID) {
         this.myID = myID;
@@ -31,11 +31,16 @@ public class Group extends MiniTwitComponent {
     public String getMyID() {
         return myID;
     }
+    
+    //TEMP MAYBE?
+    public List<MiniTwitComponent> getMyList(){
+        return componentList;
+    }
 
     @Override
     public boolean checkForUniqueID(String theID) {
         boolean checkFlag = true;
-        if (theID.equals(myID)) {
+        if (theID.equals(this.myID)) {
             checkFlag = false;
         } else {
             for (MiniTwitComponent component : componentList) {
@@ -47,6 +52,32 @@ public class Group extends MiniTwitComponent {
         }
 
         return checkFlag;
+    }
+    
+    @Override
+    public MiniTwitComponent getChild(String findID) {
+        MiniTwitComponent foundComponent = null;
+        if(findID.equals(this.myID)){
+            foundComponent = this;
+        }else{
+            for (MiniTwitComponent component : componentList) {
+                if (component.getChild(findID) != null) {
+                    foundComponent = component.getChild(findID);
+                    break;
+                }
+            }
+        }
+        
+        return foundComponent;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Group: " + this.myID);
+        for (MiniTwitComponent component : componentList) {
+            component.print();
+        }
+        System.out.println("---------");
     }
 
 }

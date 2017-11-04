@@ -21,8 +21,15 @@ public abstract class MiniTwitComponent {
         throw new UnsupportedOperationException();
     }
     
+    public MiniTwitComponent getChild(String findID){
+        throw new UnsupportedOperationException();
+    }
+    
     public abstract String getMyID();
     
     public abstract boolean checkForUniqueID(String theID);
+    
+    //POSSIBLE TEMP FOR WORKING - CONSIDER REMOVING LATER
+    public abstract void print();
     
 }
