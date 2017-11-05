@@ -109,8 +109,9 @@ public class AdminPanel extends javax.swing.JPanel {
             JPanel userPanel = new UserPanel(theUser);
             
             userFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-            userFrame.setLocationRelativeTo(null);
+            userFrame.setTitle("User " + theUser.getMyID() + "'s Control Panel");
             userFrame.add(userPanel);
+            userFrame.setLocationRelativeTo(this);
             userFrame.pack();
             userFrame.setVisible(true);
         }

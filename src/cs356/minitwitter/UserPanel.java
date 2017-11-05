@@ -11,7 +11,7 @@ package cs356.minitwitter;
  */
 public class UserPanel extends javax.swing.JPanel {
 
-    MiniTwitComponent myUser;
+    private MiniTwitComponent myUser;
     /**
      * Creates new form UserPanel
      */
