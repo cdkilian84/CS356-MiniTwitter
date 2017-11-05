@@ -21,29 +21,19 @@ public class Driver {
      */
     public static void main(String[] args) {
         initLookAndFeel();
-        JFrame mainFrame = new JFrame();
-        JPanel mainPanel = new AdminPanel();
-        
-//        mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-//        mainFrame.setSize(new java.awt.Dimension(800, 500));
-//        mainFrame.add(mainPanel);
-//        mainFrame.pack();
-//        mainFrame.setLocationRelativeTo(null);
-//        mainFrame.setVisible(true);
 
-
-        AdminControl controller = AdminControl.getInstance();
-        controller.getRoot().addUser(new User("Adam"));
-        controller.getRoot().addUser(new User("John"));
-        controller.getRoot().addUser(new Group("Cool People"));
-        MiniTwitComponent test = controller.getRoot().getChild("Cool People");
-        test.addUser(new User("Chris"));
-        test.addUser(new User("Susan"));
-        test.addUser(new Group("The Coolest"));
-        MiniTwitComponent test2 = controller.getRoot().getChild("The Coolest");
-        test2.addUser(new User("Stevearino"));
-        test2.addUser(new User("Roger"));
-        controller.getRoot().addUser(new User("Nina"));
+//        AdminControl controller = AdminControl.getInstance();
+//        controller.getRoot().addUser(new User("Adam"));
+//        controller.getRoot().addUser(new User("John"));
+//        controller.getRoot().addUser(new Group("Cool People"));
+//        MiniTwitComponent test = controller.getRoot().getChild("Cool People");
+//        test.addUser(new User("Chris"));
+//        test.addUser(new User("Susan"));
+//        test.addUser(new Group("The Coolest"));
+//        MiniTwitComponent test2 = controller.getRoot().getChild("The Coolest");
+//        test2.addUser(new User("Stevearino"));
+//        test2.addUser(new User("Roger"));
+//        controller.getRoot().addUser(new User("Nina"));
         
         //controller.getRoot().print();
         
@@ -51,8 +41,25 @@ public class Driver {
         //    component.print();
         //}
         
-        System.out.println(((Group)controller.getRoot()).checkForUniqueID("Cool People"));
+        //System.out.println(((Group)controller.getRoot()).checkForUniqueID("Cool People"));
         
+        JFrame mainFrame = new JFrame();
+        JPanel mainPanel = new AdminPanel();
+        mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setSize(new java.awt.Dimension(800, 500));
+        mainFrame.add(mainPanel);
+        mainFrame.pack();
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setVisible(true);
+        
+        //Need to implement at some point!
+        /*
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                //stuff
+            }
+        });
+        */
     }
     
     //method: initLookAndFeel

@@ -71,11 +71,16 @@ public class Group extends MiniTwitComponent {
 
     @Override
     public void print() {
-        System.out.println("Group: " + this.myID);
-        for (MiniTwitComponent component : componentList) {
-            component.print();
+        if(componentList.isEmpty()){
+            System.out.println(", Group: " + this.myID);
+        }else{
+            for (MiniTwitComponent component : componentList) {
+                System.out.print("Group: " + this.myID);
+                component.print();
+            }
         }
-        System.out.println("---------");
+        
+        //System.out.println("---------");
     }
 
 }

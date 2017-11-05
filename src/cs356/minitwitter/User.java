@@ -57,7 +57,7 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
 
     @Override
     public void print() {
-        System.out.println("User: " + myID);
+        System.out.println(", User: " + myID);
     }
 
     //SUBJECT METHOD
