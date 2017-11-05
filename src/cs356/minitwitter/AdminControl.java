@@ -34,5 +34,17 @@ public class AdminControl {
     public MiniTwitComponent getRoot(){
         return root;
     }
+    
+    public MiniTwitComponent getComponent(String theID){
+        MiniTwitComponent foundComponent = null;
+        if(theID != null){
+            foundComponent = this.root.getChild(theID);
+        }
+        return foundComponent;
+    }
+    
+    public boolean checkForUniqueID(String theID){
+        return ((Group)this.root).checkForUniqueID(theID);
+    }
 
 }

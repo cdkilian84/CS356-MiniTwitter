@@ -56,7 +56,7 @@ public class AdminPanel extends javax.swing.JPanel {
 
     private void addComponentHandler(String theID, String type) {
         if (!theID.isEmpty()) { //only add users that don't have a blank name and are a unique ID
-            if (((Group) controller.getRoot()).checkForUniqueID(theID)) {
+            if (controller.checkForUniqueID(theID)){//(((Group) controller.getRoot()).checkForUniqueID(theID)) {
                 MiniTwitComponent newComponent;
                 DefaultMutableTreeNode newNode;
                 DefaultMutableTreeNode selectedNode;
@@ -77,7 +77,7 @@ public class AdminPanel extends javax.swing.JPanel {
                     selectedNode = rootNode;
                 } else {
                     selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-                    MiniTwitComponent theComponent = controller.getRoot().getChild(selectedNode.toString()); //get the group to insert into based on ID (same as selected group name)
+                    MiniTwitComponent theComponent = controller.getComponent(selectedNode.toString());//controller.getRoot().getChild(selectedNode.toString()); //get the group to insert into based on ID (same as selected group name)
                     if (theComponent instanceof Group) {
                         insertionLocation = theComponent;
                     }
@@ -104,7 +104,7 @@ public class AdminPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please select a valid user (not a group!) to open.");
         } else {
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-            MiniTwitComponent theUser = controller.getRoot().getChild(selectedNode.toString());
+            MiniTwitComponent theUser = controller.getComponent(selectedNode.toString());//controller.getRoot().getChild(selectedNode.toString());
             JFrame userFrame = new JFrame();
             JPanel userPanel = new UserPanel(theUser);
             
