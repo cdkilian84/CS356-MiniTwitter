@@ -7,6 +7,6 @@ package cs356.minitwitter;
  *
  * @author Chris
  */
-public interface MiniTwitObserver {
-    public void update(String theTweet);
+public interface MiniTwitElement {
+    public void accept(MiniTwitVisitor theVisitor);
 }

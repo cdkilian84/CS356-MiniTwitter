@@ -1,8 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Author: Christopher Kilian
+//CS 356
+//Project #2 - Mini-Twitter
 package cs356.minitwitter;
 
 import java.util.ArrayList;
@@ -119,6 +117,11 @@ public class AdminPanel extends javax.swing.JPanel {
 
     }
 
+    private void userTotalHandler(){
+        MiniTwitVisitor userTotalVisitor = new MiniTwitUserTotalVisitor();
+        controller.accept(userTotalVisitor);
+        JOptionPane.showMessageDialog(null, "The total number of users is: " + ((MiniTwitUserTotalVisitor)userTotalVisitor).getUserCount());
+    }
 
 
     /**
@@ -135,11 +138,12 @@ public class AdminPanel extends javax.swing.JPanel {
         addUserButton = new javax.swing.JButton();
         addGroupButton = new javax.swing.JButton();
         openUserButton = new javax.swing.JButton();
+        treeScrollPane = new javax.swing.JScrollPane();
+        miscFuncPanel = new javax.swing.JPanel();
         showUserTotalButton = new javax.swing.JButton();
         showGroupTotalButton = new javax.swing.JButton();
         showMessagesTotalButton = new javax.swing.JButton();
         showPosPercentButton = new javax.swing.JButton();
-        treeScrollPane = new javax.swing.JScrollPane();
 
         userIDField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         userIDField.setToolTipText("Enter User ID to create");
@@ -176,21 +180,32 @@ public class AdminPanel extends javax.swing.JPanel {
             }
         });
 
+        miscFuncPanel.setLayout(new java.awt.GridLayout(2, 2, 10, 10));
+
         showUserTotalButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         showUserTotalButton.setText("Show User Total");
         showUserTotalButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        showUserTotalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showUserTotalButtonActionPerformed(evt);
+            }
+        });
+        miscFuncPanel.add(showUserTotalButton);
 
         showGroupTotalButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         showGroupTotalButton.setText("Show Group Total");
         showGroupTotalButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        miscFuncPanel.add(showGroupTotalButton);
 
         showMessagesTotalButton.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         showMessagesTotalButton.setText("Show Messages Total");
         showMessagesTotalButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        miscFuncPanel.add(showMessagesTotalButton);
 
         showPosPercentButton.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         showPosPercentButton.setText("Show Positive Percentage");
         showPosPercentButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        miscFuncPanel.add(showPosPercentButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -212,17 +227,9 @@ public class AdminPanel extends javax.swing.JPanel {
                                     .addComponent(addUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(addGroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(openUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(31, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(showUserTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(showGroupTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 55, 55))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(showMessagesTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(showPosPercentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(miscFuncPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,15 +244,9 @@ public class AdminPanel extends javax.swing.JPanel {
                     .addComponent(addGroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(openUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(showUserTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showGroupTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(showMessagesTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showPosPercentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31))
+                .addGap(120, 120, 120)
+                .addComponent(miscFuncPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                .addContainerGap(63, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(treeScrollPane)
@@ -270,11 +271,16 @@ public class AdminPanel extends javax.swing.JPanel {
         openUserHandler();
     }//GEN-LAST:event_openUserButtonActionPerformed
 
+    private void showUserTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showUserTotalButtonActionPerformed
+        userTotalHandler();
+    }//GEN-LAST:event_showUserTotalButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addGroupButton;
     private javax.swing.JButton addUserButton;
     private javax.swing.JTextField groupIDField;
+    private javax.swing.JPanel miscFuncPanel;
     private javax.swing.JButton openUserButton;
     private javax.swing.JButton showGroupTotalButton;
     private javax.swing.JButton showMessagesTotalButton;

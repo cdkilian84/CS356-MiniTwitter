@@ -1,8 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Author: Christopher Kilian
+//CS 356
+//Project #2 - Mini-Twitter
 package cs356.minitwitter;
 
 import java.util.ArrayList;
@@ -86,6 +84,11 @@ public class Group extends MiniTwitComponent {
     @Override
     public String toString(){
         return this.myID;
+    }
+
+    @Override
+    public void accept(MiniTwitVisitor theVisitor) {
+        theVisitor.visitGroup(this);
     }
 
 }

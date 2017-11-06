@@ -1,15 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Author: Christopher Kilian
+//CS 356
+//Project #2 - Mini-Twitter
 package cs356.minitwitter;
 
 /**
  *
  * @author Chris
  */
-public class AdminControl {
+public class AdminControl implements MiniTwitElement{
 
     private static AdminControl theAdmin;
     private MiniTwitComponent root; //the root object of the MiniTwitComponents, which will be a Group named "Root" - contains all other subgroups and users
@@ -45,6 +43,11 @@ public class AdminControl {
     
     public boolean checkForUniqueID(String theID){
         return ((Group)this.root).checkForUniqueID(theID);
+    }
+
+    @Override
+    public void accept(MiniTwitVisitor theVisitor) {
+        theVisitor.visitAdmin(AdminControl.getInstance());
     }
 
 }
