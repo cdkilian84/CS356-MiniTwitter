@@ -7,6 +7,7 @@ package cs356.minitwitter;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -17,13 +18,17 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
     private String myID;
     private List<MiniTwitObserver> myFollowers;
     private List<MiniTwitComponent> following;
-    private List<String> tweets;
-
+    private List<String> tweets; //should this hold only tweets recieved from others, or own tweets as well? Ask prof! For now, hold all tweets
+    private DefaultListModel myTweetListModel; //allows easy access by a display element to view the list of tweets
+    private DefaultListModel myFollowingListModel; //allows easy access by a display element to view the list of users being followed
+    
     public User(String myID) {
         this.myID = myID;
         myFollowers = new ArrayList<>();
         following = new ArrayList<>();
         tweets = new ArrayList<>();
+        myTweetListModel = new DefaultListModel();
+        myFollowingListModel = new DefaultListModel();
     }
 
     //Tell a User object to follow another User object. The passed value is the User to be followed by the User
@@ -35,6 +40,7 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
             ((User) user).addObserver(this);
             if(!following.contains(user)){ //only add the user to "following" if they don't already exist in the list
                 following.add(user);
+                myFollowingListModel.addElement(user.getMyID());
             }
         }
     }
@@ -83,6 +89,36 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
     @Override
     public void update(String theTweet) {
         tweets.add(theTweet);
+        myTweetListModel.addElement(theTweet);
+    }
+    
+    //Method to be called in order to post a tweet - handles updating of tweet with user info, and calling "notifyObeservers" method
+    public void postTweet(String tweet){
+        String theTweet = this.myID + ": " + tweet;
+        tweets.add(theTweet);
+        myTweetListModel.addElement(theTweet);
+        notifyObservers(theTweet);
+    }
+    
+    public List<MiniTwitComponent> getFollowingList(){
+        return following;
+    }
+    
+    public List<String> getTweetsList(){
+        return tweets;
+    }
+
+    @Override
+    public String toString(){
+        return this.myID;
+    }
+    
+    public DefaultListModel getMyTweetListModel(){
+        return myTweetListModel;
+    }
+    
+    public DefaultListModel getMyFollowingListModel(){
+        return myFollowingListModel;
     }
 
 }

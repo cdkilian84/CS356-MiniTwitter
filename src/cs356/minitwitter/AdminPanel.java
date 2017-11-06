@@ -44,10 +44,9 @@ public class AdminPanel extends javax.swing.JPanel {
         UIManager.put("Tree.closedIcon", new ImageIcon(getClass().getResource("/groupIconSm.jpg")));
         UIManager.put("Tree.openIcon", new ImageIcon(getClass().getResource("/groupIconSm.jpg")));
         UIManager.put("Tree.leafIcon", new ImageIcon(getClass().getResource("/userIconSm.jpg")));
-        rootNode = new DefaultMutableTreeNode(controller.getRoot().getMyID());
+        rootNode = new DefaultMutableTreeNode(controller.getRoot());//new DefaultMutableTreeNode(controller.getRoot().getMyID());
         treeModel = new DefaultTreeModel(rootNode);
         mainViewTree = new JTree(treeModel);
-        //mainViewTree.setEditable(true);
         mainViewTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         mainViewTree.setShowsRootHandles(true);
 
@@ -56,7 +55,7 @@ public class AdminPanel extends javax.swing.JPanel {
 
     private void addComponentHandler(String theID, String type) {
         if (!theID.isEmpty()) { //only add users that don't have a blank name and are a unique ID
-            if (controller.checkForUniqueID(theID)){//(((Group) controller.getRoot()).checkForUniqueID(theID)) {
+            if (controller.checkForUniqueID(theID)){
                 MiniTwitComponent newComponent;
                 DefaultMutableTreeNode newNode;
                 DefaultMutableTreeNode selectedNode;
@@ -66,10 +65,10 @@ public class AdminPanel extends javax.swing.JPanel {
                 //instantiate newComponent and newNode based on type
                 if (type.equals(USER)) {
                     newComponent = new User(theID);
-                    newNode = new DefaultMutableTreeNode(theID, false); //users are always leaf nodes
+                    newNode = new DefaultMutableTreeNode(newComponent, false);//new DefaultMutableTreeNode(theID, false); //users are always leaf nodes
                 } else { //if it's not a user, it must be a group
                     newComponent = new Group(theID);
-                    newNode = new DefaultMutableTreeNode(theID, true); //Groups allow children
+                    newNode = new DefaultMutableTreeNode(newComponent, true);//new DefaultMutableTreeNode(theID, true); //Groups allow children
                 }
 
                 //first check if null, if not null check if selected path value allows children or not (if not, use root node instead)
@@ -77,7 +76,7 @@ public class AdminPanel extends javax.swing.JPanel {
                     selectedNode = rootNode;
                 } else {
                     selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-                    MiniTwitComponent theComponent = controller.getComponent(selectedNode.toString());//controller.getRoot().getChild(selectedNode.toString()); //get the group to insert into based on ID (same as selected group name)
+                    MiniTwitComponent theComponent = controller.getComponent(selectedNode.toString());//get the group to insert into based on ID (same as selected group name)
                     if (theComponent instanceof Group) {
                         insertionLocation = theComponent;
                     }
@@ -104,37 +103,24 @@ public class AdminPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please select a valid user (not a group!) to open.");
         } else {
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-            MiniTwitComponent theUser = controller.getComponent(selectedNode.toString());//controller.getRoot().getChild(selectedNode.toString());
+            //TEST
+            //MiniTwitComponent theUser = controller.getComponent(selectedNode.toString());//controller.getRoot().getChild(selectedNode.toString());
+            MiniTwitComponent theUser = (MiniTwitComponent) selectedNode.getUserObject();
             JFrame userFrame = new JFrame();
             JPanel userPanel = new UserPanel(theUser);
             
             userFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
             userFrame.setTitle("User " + theUser.getMyID() + "'s Control Panel");
             userFrame.add(userPanel);
-            userFrame.setLocationRelativeTo(this);
             userFrame.pack();
+            userFrame.setLocationRelativeTo(this);
             userFrame.setVisible(true);
         }
 
     }
 
 
-    /*
-    jScrollPane1 = new javax.swing.JScrollPane();
-        mainViewTree = new JTree(root);
-        userIDField = new javax.swing.JTextField();
-        groupIDField = new javax.swing.JTextField();
-        addUserButton = new javax.swing.JButton();
-        addGroupButton = new javax.swing.JButton();
-        openUserButton = new javax.swing.JButton();
-        showUserTotalButton = new javax.swing.JButton();
-        showGroupTotalButton = new javax.swing.JButton();
-        showMessagesTotalButton = new javax.swing.JButton();
-        showPosPercentButton = new javax.swing.JButton();
 
-        jScrollPane1.setViewportView(mainViewTree);
-    
-     */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

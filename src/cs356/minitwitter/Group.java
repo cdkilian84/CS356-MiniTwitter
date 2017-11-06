@@ -82,5 +82,10 @@ public class Group extends MiniTwitComponent {
         
         //System.out.println("---------");
     }
+    
+    @Override
+    public String toString(){
+        return this.myID;
+    }
 
 }

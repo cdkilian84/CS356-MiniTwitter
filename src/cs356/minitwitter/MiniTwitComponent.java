@@ -21,11 +21,15 @@ public abstract class MiniTwitComponent {
         throw new UnsupportedOperationException("Operation not supported by this component.");
     }
     
+    
     public abstract MiniTwitComponent getChild(String findID);
     
     public abstract String getMyID();
     
     //POSSIBLE TEMP FOR WORKING - CONSIDER REMOVING LATER
     public abstract void print();
+    
+    @Override
+    public abstract String toString();
     
 }
