@@ -32,8 +32,8 @@ public class AdminPanel extends javax.swing.JPanel {
     private DefaultTreeModel treeModel;
     private final String USER = "User";
     private final String GROUP = "Group";
+    
 
-    //List<DefaultMutableTreeNode> viewableTreeNodes; //probably don't need
     public AdminPanel() {
         controller = AdminControl.getInstance();
         initComponents();
