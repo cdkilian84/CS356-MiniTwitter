@@ -18,10 +18,6 @@ import javax.swing.tree.TreeSelectionModel;
 //and Groups, as well as access the User panels for individual users, and gain statistical information about the program status (number
 //of users, groups, etc). The methods here handle communication between the panel and the AdminControl object which holds all of the main program
 //data, as well as handles the displaying of the tree information.
-
-//TO ASK: Good idea to store treeModel value in Controller?
-//TO ASK: Should Users be allowed to follow themselves?
-//ASK: should Users hold only tweets recieved from others, or own tweets as well? Ask prof! For now, hold all tweets
 public class AdminPanel extends javax.swing.JPanel {
 
     private AdminControl controller;
@@ -229,6 +225,7 @@ public class AdminPanel extends javax.swing.JPanel {
 
         addUserButton.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
         addUserButton.setText("Add User");
+        addUserButton.setToolTipText("Make sure to enter an ID first!");
         addUserButton.setPreferredSize(new java.awt.Dimension(150, 40));
         addUserButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,6 +235,7 @@ public class AdminPanel extends javax.swing.JPanel {
 
         addGroupButton.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
         addGroupButton.setText("Add Group");
+        addGroupButton.setToolTipText("Make sure to enter an ID first!");
         addGroupButton.setPreferredSize(new java.awt.Dimension(150, 40));
         addGroupButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

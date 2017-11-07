@@ -125,6 +125,7 @@ public class UserPanel extends javax.swing.JPanel {
         tweetTextArea.setColumns(20);
         tweetTextArea.setLineWrap(true);
         tweetTextArea.setRows(5);
+        tweetTextArea.setToolTipText("Pearls of wisdom");
         tweetTextArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         tweetTextArea.setPreferredSize(new java.awt.Dimension(260, 82));
         jScrollPane2.setViewportView(tweetTextArea);
