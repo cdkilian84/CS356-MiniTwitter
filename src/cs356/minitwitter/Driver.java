@@ -5,63 +5,55 @@ package cs356.minitwitter;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-/**
- *
- * @author Chris
- */
+//The driver for the Mini-Twitter program creates the frame which will hold the admin panel, and then makes it visible to the user.
 public class Driver {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        initLookAndFeel();
 
+        //This commented out block is used to demonstrate the ability of the program to handle pre-defined tree structure data
+        //Uncomment this block to see this in action!
 //        AdminControl controller = AdminControl.getInstance();
-//        controller.getRoot().addUser(new User("Adam"));
-//        controller.getRoot().addUser(new User("John"));
-//        controller.getRoot().addUser(new Group("Cool People"));
-//        MiniTwitComponent test = controller.getRoot().getChild("Cool People");
-//        test.addUser(new User("Chris"));
-//        test.addUser(new User("Susan"));
-//        test.addUser(new Group("The Coolest"));
-//        MiniTwitComponent test2 = controller.getRoot().getChild("The Coolest");
-//        test2.addUser(new User("Stevearino"));
-//        test2.addUser(new User("Roger"));
-//        controller.getRoot().addUser(new User("Nina"));
+//        controller.insertComponent(new User("Chris"), controller.getRoot());
+//        controller.insertComponent(new User("Susan"), controller.getRoot());
+//        controller.insertComponent(new User("Nina"), controller.getRoot());
+//        Group ninjas = new Group("Ninjas");
+//        controller.insertComponent(ninjas, controller.getRoot());
+//        controller.insertComponent(new User("Joe"), ninjas);
+//        controller.insertComponent(new User("Steve"), ninjas);
+//        Group whales = new Group("Whales");
+//        Group superNinjas = new Group("SuperNinjas");
+//        Group starfleet = new Group("Starfleet");
+//        controller.insertComponent(whales, controller.getRoot());
+//        controller.insertComponent(new User("Mary"), controller.getRoot());
+//        controller.insertComponent(starfleet, controller.getRoot());
+//        controller.insertComponent(superNinjas, ninjas);
+//        controller.insertComponent(new User("Roger"), superNinjas);
+//        controller.insertComponent(new User("Elizabeth"), superNinjas);
+//        controller.insertComponent(new User("Picard"), starfleet);
+//        controller.insertComponent(new User("Data"), starfleet);
+//        controller.insertComponent(new User("Snuggles"), whales);
         
-        //controller.getRoot().print();
         
-        //for(MiniTwitComponent component : ((Group)controller.getRoot()).getMyList()){
-        //    component.print();
-        //}
-        
-        //System.out.println(((Group)controller.getRoot()).checkForUniqueID("Cool People"));
-        
-        JFrame mainFrame = new JFrame();
-        JPanel mainPanel = new AdminPanel();
-        mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        mainFrame.setSize(new java.awt.Dimension(800, 500));
-        mainFrame.add(mainPanel);
-        mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setVisible(true);
-        
-        //Need to implement at some point!
-        /*
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                //stuff
+                initLookAndFeel();
+                JFrame mainFrame = new JFrame();
+                JPanel mainPanel = new AdminPanel();
+                mainFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+                mainFrame.setSize(new java.awt.Dimension(800, 500));
+                mainFrame.add(mainPanel);
+                mainFrame.pack();
+                mainFrame.setLocationRelativeTo(null);
+                mainFrame.setVisible(true);
             }
         });
-        */
     }
-    
-    //method: initLookAndFeel
-    //purpose: Sets up the "look and feel" of the game
+
+    //initLookAndFeel sets up the "look and feel" of the program (setting to Cross Platform)
     private static void initLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -79,6 +71,5 @@ public class Driver {
             System.err.println("Using default look and feel.");
         }
     }
-    
-    
+
 }

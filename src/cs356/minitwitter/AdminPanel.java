@@ -3,9 +3,6 @@
 //Project #2 - Mini-Twitter
 package cs356.minitwitter;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -13,60 +10,103 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-/**
- *
- * @author Chris
- */
+//This panel defines the main method of interaction with the Mini-Twitter program. Through the panel the administrator can add Users
+//and Groups, as well as access the User panels for individual users, and gain statistical information about the program status (number
+//of users, groups, etc). The methods here handle communication between the panel and the AdminControl object which holds all of the main program
+//data, as well as handles the displaying of the tree information.
+
+//TO ASK: Good idea to store treeModel value in Controller?
+//TO ASK: Should Users be allowed to follow themselves?
+//ASK: should Users hold only tweets recieved from others, or own tweets as well? Ask prof! For now, hold all tweets
 public class AdminPanel extends javax.swing.JPanel {
 
     private AdminControl controller;
     private JTree mainViewTree;
     private DefaultMutableTreeNode rootNode; //the root of the visible tree on the panel
-    private DefaultTreeModel treeModel;
+    private DefaultTreeModel treeModel; //model used by the tree
     private final String USER = "User";
     private final String GROUP = "Group";
-    
 
+    //Constructor for the panel - gets the instance of the AdminControl and initializes the panel components
     public AdminPanel() {
         controller = AdminControl.getInstance();
         initComponents();
         initTree();
     }
 
+    //Initialize the JTree object which will visualize the Users and Groups - should only be called on program start (during panel construction)
     private void initTree() {
         UIManager.put("Tree.closedIcon", new ImageIcon(getClass().getResource("/groupIconSm.jpg")));
         UIManager.put("Tree.openIcon", new ImageIcon(getClass().getResource("/groupIconSm.jpg")));
         UIManager.put("Tree.leafIcon", new ImageIcon(getClass().getResource("/userIconSm.jpg")));
-        rootNode = new DefaultMutableTreeNode(controller.getRoot());//new DefaultMutableTreeNode(controller.getRoot().getMyID());
-        treeModel = new DefaultTreeModel(rootNode);
+        //Check to see if controller has pre-existing data or if it only contains an empty root Group
+        if (((Group) controller.getRoot()).getMyList().isEmpty()) {
+            System.out.println("Empty tree, starting from scratch!");
+            rootNode = new DefaultMutableTreeNode(controller.getRoot());
+            treeModel = new DefaultTreeModel(rootNode);
+        }else{ //if the root's list has values, then the data tree already has structure and needs to be built
+            System.out.println("Existing tree data found!! Building representation from tree data!");
+            buildModelFromExisting(null, controller.getRoot());
+        }
+
+        //build visualized tree from pre-existing data here:
         mainViewTree = new JTree(treeModel);
         mainViewTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         mainViewTree.setShowsRootHandles(true);
-
         treeScrollPane.setViewportView(mainViewTree);
     }
 
+    //Method to build the onscreen representation of data already stored in the AdminController object.
+    //This ensures that if user/group data was added to the controller before opening the window, the on-screen
+    //tree will still be reflective of the information stored by the controller object.
+    private void buildModelFromExisting(DefaultMutableTreeNode parentNode, MiniTwitComponent toInsert) {
+        DefaultMutableTreeNode newNode = null;
+        //if parentNode is null and toInsert is "Root", then this is the first call for this method and the treeModel must be instantiated before continuing
+        if (parentNode == null && toInsert.getMyID().equals("Root")) { 
+            parentNode = rootNode = new DefaultMutableTreeNode(controller.getRoot());
+            treeModel = new DefaultTreeModel(rootNode);
+            for (MiniTwitComponent component : ((Group) toInsert).getMyList()) {
+                buildModelFromExisting(rootNode, component);
+            }
+        } else {
+            if(toInsert instanceof User){
+                newNode = new DefaultMutableTreeNode(toInsert, false); //users are always leaf nodes
+            }else{
+                newNode = new DefaultMutableTreeNode(toInsert, true); //groups allow children
+            }
+            
+            treeModel.insertNodeInto(newNode, parentNode, parentNode.getChildCount());
+            if (toInsert instanceof Group) { //if the object just inserted is a group, then insert all of its children with this group as parent
+                for (MiniTwitComponent component : ((Group) toInsert).getMyList()) {
+                    buildModelFromExisting(newNode, component);
+                }
+            }
+        }
+    }
+
+    //Method which handles the addition of a specified component to both the data and visualized trees. Ensures they are in sync.
+    //If the component ID is not unique, method informs user and terminates (without adding anything). The same occurs if the user
+    //attempts to add a component with no ID at all.
     private void addComponentHandler(String theID, String type) {
         if (!theID.isEmpty()) { //only add users that don't have a blank name and are a unique ID
-            if (controller.checkForUniqueID(theID)){
+            if (controller.checkForUniqueID(theID)) {
                 MiniTwitComponent newComponent;
                 DefaultMutableTreeNode newNode;
                 DefaultMutableTreeNode selectedNode;
                 MiniTwitComponent insertionLocation = controller.getRoot(); //default to inserting new users in the root group
-                TreePath selectedPath = mainViewTree.getSelectionPath();
+                TreePath selectedPath = mainViewTree.getSelectionPath(); //path selected by user on the panel
 
                 //instantiate newComponent and newNode based on type
                 if (type.equals(USER)) {
                     newComponent = new User(theID);
-                    newNode = new DefaultMutableTreeNode(newComponent, false);//new DefaultMutableTreeNode(theID, false); //users are always leaf nodes
+                    newNode = new DefaultMutableTreeNode(newComponent, false);//users are always leaf nodes
                 } else { //if it's not a user, it must be a group
                     newComponent = new Group(theID);
-                    newNode = new DefaultMutableTreeNode(newComponent, true);//new DefaultMutableTreeNode(theID, true); //Groups allow children
+                    newNode = new DefaultMutableTreeNode(newComponent, true);//Groups allow children
                 }
 
                 //first check if null, if not null check if selected path value allows children or not (if not, use root node instead)
@@ -80,7 +120,7 @@ public class AdminPanel extends javax.swing.JPanel {
                     }
                 }
 
-                insertionLocation.addUser(newComponent); //add new user/group to the proper location in the admin tree structure
+                controller.insertComponent(newComponent, insertionLocation); //add new user/group to the proper location in the admin tree structure
                 treeModel.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount()); //add new user to the proper location in the visible tree
                 mainViewTree.scrollPathToVisible(new TreePath(newNode.getPath()));
             } else {
@@ -90,10 +130,14 @@ public class AdminPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Cannot add an item with an empty ID!");
         }
 
-        controller.getRoot().print();
-        System.out.println("----------------------------");
+        //these calls are strictly for testing purposes (visualizes the stored tree structure in the command line)
+        //controller.getRoot().print(); 
+        //System.out.println("----------------------------");
     }
 
+    //Method which handles the opening of a User Panel.
+    //Checks to see if a user was selected (if not, notify Admin). Pass selected User object to the User Panel for instantiation
+    //and open a new Frame to hold that panel.
     private void openUserHandler() {
         TreePath selectedPath = mainViewTree.getSelectionPath();
 
@@ -101,12 +145,10 @@ public class AdminPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please select a valid user (not a group!) to open.");
         } else {
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-            //TEST
-            //MiniTwitComponent theUser = controller.getComponent(selectedNode.toString());//controller.getRoot().getChild(selectedNode.toString());
-            MiniTwitComponent theUser = (MiniTwitComponent) selectedNode.getUserObject();
+            MiniTwitComponent theUser = controller.getComponent(selectedNode.toString());
             JFrame userFrame = new JFrame();
             JPanel userPanel = new UserPanel(theUser);
-            
+
             userFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
             userFrame.setTitle("User " + theUser.getMyID() + "'s Control Panel");
             userFrame.add(userPanel);
@@ -117,34 +159,45 @@ public class AdminPanel extends javax.swing.JPanel {
 
     }
 
-    private void userTotalHandler(){
+    //Method which handles the displaying of the total number of users.
+    //Instantiate an appropriate visitor object, and have it visit the controller (which will then handle
+    //all other visitations required). Finally display the results.
+    private void userTotalHandler() {
         MiniTwitVisitor userTotalVisitor = new MiniTwitUserTotalVisitor();
         controller.accept(userTotalVisitor);
-        JOptionPane.showMessageDialog(null, "The total number of users is: " + ((MiniTwitUserTotalVisitor)userTotalVisitor).getUserCount());
+        JOptionPane.showMessageDialog(null, "The total number of users is: " + ((MiniTwitUserTotalVisitor) userTotalVisitor).getUserCount());
     }
-    
-    private void groupTotalHandler(){
+
+    //Method which handles the displaying of the total number of groups.
+    //Instantiate an appropriate visitor object, and have it visit the controller (which will then handle
+    //all other visitations required). Finally display the results.
+    private void groupTotalHandler() {
         MiniTwitVisitor groupTotalVisitor = new MiniTwitGroupTotalVisitor();
         controller.accept(groupTotalVisitor);
-        JOptionPane.showMessageDialog(null, "The total number of groups is: " + ((MiniTwitGroupTotalVisitor)groupTotalVisitor).getGroupCount() 
-        + "\n" + "(Remember that the group count is always a minimum of 1 thanks to the Root!)");
+        JOptionPane.showMessageDialog(null, "The total number of groups is: " + ((MiniTwitGroupTotalVisitor) groupTotalVisitor).getGroupCount()
+                + "\n" + "(Remember that the group count is always a minimum of 1 thanks to the Root!)");
     }
-    
-    private void messageTotalHandler(){
+
+    //Method which handles the displaying of the total number of messages stored by the system.
+    //Instantiate an appropriate visitor object, and have it visit the controller (which will then handle
+    //all other visitations required). Finally display the results.
+    private void messageTotalHandler() {
         MiniTwitVisitor messageTotalVisitor = new MiniTwitMessageTotalVisitor();
         controller.accept(messageTotalVisitor);
-        JOptionPane.showMessageDialog(null, "The total number of messages stored in the system is: " + ((MiniTwitMessageTotalVisitor)messageTotalVisitor).getMessageCount());
+        JOptionPane.showMessageDialog(null, "The total number of messages stored in the system is: " + ((MiniTwitMessageTotalVisitor) messageTotalVisitor).getMessageCount());
     }
-    
-    private void positiveMessageHandler(){
+
+    //Method which handles the displaying of the percentage of "positive" messages in the system (determined by the
+    //visitor object). Instantiate an appropriate visitor object, and have it visit the controller (which will then handle
+    //all other visitations required). Finally display the results.
+    private void positiveMessageHandler() {
         MiniTwitVisitor positivePercentageVisitor = new MiniTwitPosPercentVisitor();
         controller.accept(positivePercentageVisitor);
-        StringBuilder viewString = new StringBuilder();
-        JOptionPane.showMessageDialog(null, "The percentage of positive messages stored in the system is: " + 
-                ((MiniTwitPosPercentVisitor)positivePercentageVisitor).getPositivePercentage());
+        JOptionPane.showMessageDialog(null, "The percentage of positive messages stored in the system is: "
+                + ((MiniTwitPosPercentVisitor) positivePercentageVisitor).getPositivePercentage());
     }
 
-
+    //Generated code for the panel is found beyond this point. Mostly just setting up the sub-panels, labels, and action listeners for the buttons.
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -290,35 +343,41 @@ public class AdminPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    //Action listener for the "Add User" button.
     private void addUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserButtonActionPerformed
         String theID = userIDField.getText();
         userIDField.setText(""); //blank the field immediately
         addComponentHandler(theID, USER);
     }//GEN-LAST:event_addUserButtonActionPerformed
 
+    //Action listener for the "Add Group" button.
     private void addGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGroupButtonActionPerformed
         String theID = groupIDField.getText();
         groupIDField.setText(""); //blank the field immediately
         addComponentHandler(theID, GROUP);
     }//GEN-LAST:event_addGroupButtonActionPerformed
 
+    //Action listener for the "Open User View" button.
     private void openUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openUserButtonActionPerformed
         openUserHandler();
     }//GEN-LAST:event_openUserButtonActionPerformed
 
+    //Action listener for the "Show User Total" button.
     private void showUserTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showUserTotalButtonActionPerformed
         userTotalHandler();
     }//GEN-LAST:event_showUserTotalButtonActionPerformed
 
+    //Action listener for the "Show Group Total" button.
     private void showGroupTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showGroupTotalButtonActionPerformed
         groupTotalHandler();
     }//GEN-LAST:event_showGroupTotalButtonActionPerformed
 
+    //Action listener for the "Show Messages Total" button.
     private void showMessagesTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMessagesTotalButtonActionPerformed
         messageTotalHandler();
     }//GEN-LAST:event_showMessagesTotalButtonActionPerformed
 
+    //Action listener for the "Show Positive Percentage" button.
     private void showPosPercentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPosPercentButtonActionPerformed
         positiveMessageHandler();
     }//GEN-LAST:event_showPosPercentButtonActionPerformed

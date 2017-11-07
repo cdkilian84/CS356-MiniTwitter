@@ -3,6 +3,7 @@
 //Project #2 - Mini-Twitter
 package cs356.minitwitter;
 
+//Pattern implemented: Visitor
 //Concrete Visitor class which is designed to count the number of users which exist within the system.
 //As such, it maintains a "userCount" value which is representative of the total users counted by the visitor.
 //In order to count all users in the system total, this visitor should visit the Admin first (from which point it will
@@ -11,20 +12,18 @@ public class MiniTwitUserTotalVisitor implements MiniTwitVisitor {
 
     private int userCount; //value to store total visited users so far
     
-    //Constructor - initializes userCount to zero
+    //Constructor
     public MiniTwitUserTotalVisitor(){
         userCount = 0;
     }
     
-    //On visiting the Admin, get the root of the group/user tree and begin by visiting that group
-    //Since the group which is the root of the admin is the root of the tree, all users in the tree
-    //will be counted.
+    //On visiting the admin, begin to traverse tree by visiting the root Group
     @Override
     public void visitAdmin(AdminControl admin) {
         admin.getRoot().accept(this);
     }
 
-    //When visiting a user, increment the count.
+    //When visiting a User, increment the count.
     @Override
     public void visitUser(User theUser) {
         userCount++;

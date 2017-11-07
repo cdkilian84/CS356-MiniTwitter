@@ -3,24 +3,21 @@
 //Project #2 - Mini-Twitter
 package cs356.minitwitter;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Chris
- */
+//This panel defines the main method of interaction with a User object. It allows the user to follow other users while displaying the list of
+//Users already being followed. It also allows the user to post new tweets that they and their followers will see. These tweets are displayed
+//on this panel as well. The User object controlled by the panel is passed to the panel as part of its instantiation, and a reference to it is stored
+//in the panel itself, greatly simplifying access to that User's data.
 public class UserPanel extends javax.swing.JPanel {
 
-    private AdminControl controller;
-    private MiniTwitComponent myUser;
-    private JList followingViewList;
+    private AdminControl controller; //access to the controller object (singleton)
+    private MiniTwitComponent myUser; //the local reference to the User which corresponds to this panel (instantiated on construction)
+    private JList followingViewList; //the lists which will display User information
     private JList tweetViewList;
     
-    /**
-     * Creates new form UserPanel
-     */
+    //Constructor for panel
     public UserPanel(MiniTwitComponent user) {
         this.myUser = user;
         controller = AdminControl.getInstance();
@@ -28,6 +25,7 @@ public class UserPanel extends javax.swing.JPanel {
         initListViews();
     }
 
+    //Method to initialize the JList views using the models stored by the User object
     private void initListViews(){
         tweetViewList = new JList(((User)myUser).getMyTweetListModel());
         followingViewList = new JList(((User)myUser).getMyFollowingListModel());
@@ -35,6 +33,9 @@ public class UserPanel extends javax.swing.JPanel {
         followingScrollPane.setViewportView(followingViewList);
     }
     
+    //Handler method for posting tweets. Gets the contents of the tweet text area, and if it's empty
+    //notifies the user that they can't post an empty tweet. Otherwise, passes the gathered text to the User's
+    //"postTweet" method and clears the tweet text area for another tweet.
     private void postTweetHandler(){
         if(!tweetTextArea.getText().isEmpty()){
             ((User)myUser).postTweet(tweetTextArea.getText());
@@ -44,6 +45,13 @@ public class UserPanel extends javax.swing.JPanel {
         }
     }
     
+    //Handler method for following another User with the specified ID. 
+    //Gets the contents of the User ID text field and checks that it meets a number of criteria in order
+    //to follow. First checks for an empty field (notifies user if it's empty), next checks if the specified User
+    //exists (and notifies if they don't), then checks if the specified ID is a User or a Group (notifies if it's not a 
+    //User since only User's can be followed), and finally checks to see if this User is already following the indicated
+    //User (notifies if they are). Assuming all of these checks are passed, then finally the "followUser" method for this
+    //User is called.
     private void followUserHandler(){
         if(!toFollowField.getText().isEmpty()){
             String theID = toFollowField.getText();
@@ -67,6 +75,7 @@ public class UserPanel extends javax.swing.JPanel {
         }
     }
     
+    //Generated code for the panel is found beyond this point. Mostly just setting up the sub-panels, labels, and action listeners for the buttons.
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -193,10 +202,12 @@ public class UserPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    //Action listener for the "Post Tweet" button.
     private void postTweetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postTweetButtonActionPerformed
         postTweetHandler();
     }//GEN-LAST:event_postTweetButtonActionPerformed
 
+    //Action listener for the "Follow User" button.
     private void followUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_followUserButtonActionPerformed
         followUserHandler();
     }//GEN-LAST:event_followUserButtonActionPerformed
