@@ -173,6 +173,9 @@
               <Dimension value="[180, 40]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showGroupTotalButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="showMessagesTotalButton">
           <Properties>
@@ -184,6 +187,9 @@
               <Dimension value="[180, 40]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showMessagesTotalButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="showPosPercentButton">
           <Properties>
@@ -195,6 +201,9 @@
               <Dimension value="[180, 40]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPosPercentButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

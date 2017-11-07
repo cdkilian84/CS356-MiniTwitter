@@ -122,6 +122,27 @@ public class AdminPanel extends javax.swing.JPanel {
         controller.accept(userTotalVisitor);
         JOptionPane.showMessageDialog(null, "The total number of users is: " + ((MiniTwitUserTotalVisitor)userTotalVisitor).getUserCount());
     }
+    
+    private void groupTotalHandler(){
+        MiniTwitVisitor groupTotalVisitor = new MiniTwitGroupTotalVisitor();
+        controller.accept(groupTotalVisitor);
+        JOptionPane.showMessageDialog(null, "The total number of groups is: " + ((MiniTwitGroupTotalVisitor)groupTotalVisitor).getGroupCount() 
+        + "\n" + "(Remember that the group count is always a minimum of 1 thanks to the Root!)");
+    }
+    
+    private void messageTotalHandler(){
+        MiniTwitVisitor messageTotalVisitor = new MiniTwitMessageTotalVisitor();
+        controller.accept(messageTotalVisitor);
+        JOptionPane.showMessageDialog(null, "The total number of messages stored in the system is: " + ((MiniTwitMessageTotalVisitor)messageTotalVisitor).getMessageCount());
+    }
+    
+    private void positiveMessageHandler(){
+        MiniTwitVisitor positivePercentageVisitor = new MiniTwitPosPercentVisitor();
+        controller.accept(positivePercentageVisitor);
+        StringBuilder viewString = new StringBuilder();
+        JOptionPane.showMessageDialog(null, "The percentage of positive messages stored in the system is: " + 
+                ((MiniTwitPosPercentVisitor)positivePercentageVisitor).getPositivePercentage());
+    }
 
 
     /**
@@ -195,16 +216,31 @@ public class AdminPanel extends javax.swing.JPanel {
         showGroupTotalButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         showGroupTotalButton.setText("Show Group Total");
         showGroupTotalButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        showGroupTotalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showGroupTotalButtonActionPerformed(evt);
+            }
+        });
         miscFuncPanel.add(showGroupTotalButton);
 
         showMessagesTotalButton.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         showMessagesTotalButton.setText("Show Messages Total");
         showMessagesTotalButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        showMessagesTotalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showMessagesTotalButtonActionPerformed(evt);
+            }
+        });
         miscFuncPanel.add(showMessagesTotalButton);
 
         showPosPercentButton.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         showPosPercentButton.setText("Show Positive Percentage");
         showPosPercentButton.setPreferredSize(new java.awt.Dimension(180, 40));
+        showPosPercentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPosPercentButtonActionPerformed(evt);
+            }
+        });
         miscFuncPanel.add(showPosPercentButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -274,6 +310,18 @@ public class AdminPanel extends javax.swing.JPanel {
     private void showUserTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showUserTotalButtonActionPerformed
         userTotalHandler();
     }//GEN-LAST:event_showUserTotalButtonActionPerformed
+
+    private void showGroupTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showGroupTotalButtonActionPerformed
+        groupTotalHandler();
+    }//GEN-LAST:event_showGroupTotalButtonActionPerformed
+
+    private void showMessagesTotalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showMessagesTotalButtonActionPerformed
+        messageTotalHandler();
+    }//GEN-LAST:event_showMessagesTotalButtonActionPerformed
+
+    private void showPosPercentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPosPercentButtonActionPerformed
+        positiveMessageHandler();
+    }//GEN-LAST:event_showPosPercentButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

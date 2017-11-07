@@ -21,7 +21,7 @@ public class MiniTwitUserTotalVisitor implements MiniTwitVisitor {
     //will be counted.
     @Override
     public void visitAdmin(AdminControl admin) {
-        visitGroup((Group)admin.getRoot());
+        admin.getRoot().accept(this);
     }
 
     //When visiting a user, increment the count.
@@ -36,11 +36,7 @@ public class MiniTwitUserTotalVisitor implements MiniTwitVisitor {
     @Override
     public void visitGroup(Group theGroup) {
         for(MiniTwitComponent component : theGroup.getMyList()){
-            if(component instanceof User){
-                ((User) component).accept(this);
-            }else if(component instanceof Group){
-                visitGroup((Group)component);
-            }
+            component.accept(this);
         }
     }
     
