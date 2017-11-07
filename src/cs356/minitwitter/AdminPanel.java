@@ -67,7 +67,7 @@ public class AdminPanel extends javax.swing.JPanel {
         DefaultMutableTreeNode newNode = null;
         //if parentNode is null and toInsert is "Root", then this is the first call for this method and the treeModel must be instantiated before continuing
         if (parentNode == null && toInsert.getMyID().equals("Root")) { 
-            parentNode = rootNode = new DefaultMutableTreeNode(controller.getRoot());
+            rootNode = new DefaultMutableTreeNode(controller.getRoot());
             treeModel = new DefaultTreeModel(rootNode);
             for (MiniTwitComponent component : ((Group) toInsert).getMyList()) {
                 buildModelFromExisting(rootNode, component);
