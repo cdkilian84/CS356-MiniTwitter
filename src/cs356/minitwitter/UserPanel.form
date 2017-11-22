@@ -219,7 +219,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Century" size="12" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Creation date/time:"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="&quot;Creation date/time: &quot; + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(myUser.getCreationTime()))" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="updatedTimeLabel">
@@ -227,7 +229,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Century" size="12" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Time last updated:"/>
+            <Property name="text" type="java.lang.String" value="Time last updated: Never!"/>
           </Properties>
         </Component>
       </SubComponents>

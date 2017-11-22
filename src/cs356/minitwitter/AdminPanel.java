@@ -206,9 +206,14 @@ public class AdminPanel extends javax.swing.JPanel {
         }
     }
     
-    
+    //Method which handles the displaying of the most recently updated User in the system.
+    //Instantiate an appropriate visitor object, and have it visit the controller (which will then handle
+    //all other visitations required). Finally display the results.
     private void findLastUpdatedHandler(){
-        
+        MiniTwitVisitor validateVisitor = new MiniTwitLastUpdatedVisitor();
+        controller.accept(validateVisitor);
+        JOptionPane.showMessageDialog(null, "The most recently updated User is: " + 
+                ((MiniTwitLastUpdatedVisitor)validateVisitor).getUpdatedUser());
     }
 
     //Generated code for the panel is found beyond this point. Mostly just setting up the sub-panels, labels, and action listeners for the buttons.

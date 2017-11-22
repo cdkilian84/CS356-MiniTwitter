@@ -17,6 +17,7 @@ import javax.swing.DefaultListModel;
 //so as to ensure that a User doesn't attempt to subscribe to another User more than once. The class can accept visitors so that information can be learned
 //about the Users. And finally, the class includes two "DefaultListModel" objects which contain up-to-date information about the tweets held by the
 //instance object as well as the other Users being followed. These are provided for ease of information access by Swing components.
+//Note that the creation time attribute is part of the parent abstract class and is set by calling super() in the constructor
 public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwitObserver {
 
     private String myID;

@@ -1,6 +1,6 @@
 //Author: Christopher Kilian
 //CS 356
-//Project #2 - Mini-Twitter
+//Project #3 - Mini-Twitter 2.0
 package cs356.minitwitter;
 
 import javax.swing.JFrame;

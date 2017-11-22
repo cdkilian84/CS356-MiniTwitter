@@ -6,8 +6,11 @@ package cs356.minitwitter;
 import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 //This panel defines the main method of interaction with a User object. It allows the user to follow other users while displaying the list of
 //Users already being followed. It also allows the user to post new tweets that they and their followers will see. These tweets are displayed
@@ -24,22 +27,63 @@ public class UserPanel extends javax.swing.JPanel {
     public UserPanel(MiniTwitComponent user) {
         this.myUser = user;
         controller = AdminControl.getInstance();
+        clearListeners();
         initComponents();
         initListViews();
-        initTimes();
+        initTime();
+
+        //add listener to tweet list so that "last updated" timestamp can be dynamically updated whenever a new tweet is sent or received
+        ListDataListener updateListener = new ListDataListener() {
+            @Override
+            public void intervalAdded(ListDataEvent e) {
+                Date updatedTime = new Date(((User) myUser).getLastUpdatedTime());
+                updatedTimeLabel.setText("Last Updated: " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(updatedTime));
+            }
+
+            @Override
+            public void intervalRemoved(ListDataEvent e) {
+                System.out.println("Logging list item removed.");
+            }
+
+            @Override
+            public void contentsChanged(ListDataEvent e) {
+                System.out.println("Logging list contents changed.");
+            }
+
+        };
+
+        ((User) myUser).getMyTweetListModel().addListDataListener(updateListener);
+
     }
-    
-    //Method which initializes the timestamp labels on the panel to display creation time and the last updated time
-    private void initTimes() {
-        Date creationTime = new Date(myUser.getCreationTime());
-        creationTimeLabel.setText("Creation date/time: " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(creationTime));
+
+    //Method which initializes the timestamp label for the most recently updated time.
+    //Needed for cases when a user is updated, the User View is closed, and then reopened.
+    private void initTime() {
         if (((User) myUser).getLastUpdatedTime() != 0) {
-            Date updatedTime = new Date(((User)myUser).getLastUpdatedTime());
+            Date updatedTime = new Date(((User) myUser).getLastUpdatedTime());
             updatedTimeLabel.setText("Last Updated: " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(updatedTime));
         } else {
             updatedTimeLabel.setText("Last Updated: Never!");
         }
 
+    }
+
+    //method to ensure that there isn't a buildup of unnecessary listeners on the Users ListModel objects when opening and closing
+    //the User View windows. Only to be used in constructor before panel component initiation.
+    private void clearListeners() {
+        DefaultListModel tweetModel = ((User) myUser).getMyTweetListModel();
+        DefaultListModel followModel = ((User) myUser).getMyFollowingListModel();
+
+        if (tweetModel.getListDataListeners().length > 0) {
+            for (ListDataListener listener : tweetModel.getListDataListeners()) {
+                tweetModel.removeListDataListener(listener);
+            }
+        }
+        if (followModel.getListDataListeners().length > 0) {
+            for (ListDataListener listener : followModel.getListDataListeners()) {
+                followModel.removeListDataListener(listener);
+            }
+        }
     }
 
     //Method to initialize the JList views using the models stored by the User object
@@ -48,7 +92,6 @@ public class UserPanel extends javax.swing.JPanel {
         followingViewList = new JList(((User) myUser).getMyFollowingListModel());
         tweetScrollPane.setViewportView(tweetViewList);
         followingScrollPane.setViewportView(followingViewList);
-        
     }
 
     //Handler method for posting tweets. Gets the contents of the tweet text area, and if it's empty
@@ -94,6 +137,8 @@ public class UserPanel extends javax.swing.JPanel {
     }
 
     //Generated code for the panel is found beyond this point. Mostly just setting up the sub-panels, labels, and action listeners for the buttons.
+    //Please note that a small amount of custom code is also here, just for setting label values on the panel. Programatically sets the "nameLabel"
+    //and creationTimeLabel to show appropriate values when the panel is instantiated.
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -183,11 +228,11 @@ public class UserPanel extends javax.swing.JPanel {
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
 
         creationTimeLabel.setFont(new java.awt.Font("Century", 1, 12)); // NOI18N
-        creationTimeLabel.setText("Creation date/time:");
+        creationTimeLabel.setText("Creation date/time: " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date(myUser.getCreationTime())));
         jPanel1.add(creationTimeLabel);
 
         updatedTimeLabel.setFont(new java.awt.Font("Century", 1, 12)); // NOI18N
-        updatedTimeLabel.setText("Time last updated:");
+        updatedTimeLabel.setText("Time last updated: Never!");
         jPanel1.add(updatedTimeLabel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

@@ -12,6 +12,7 @@ public abstract class MiniTwitComponent implements MiniTwitElement {
 
     private long creationTime;
     
+    //constructor which can be explicitely called by subclasses to set the creation timestamp (also stored here)
     public MiniTwitComponent(){
         creationTime = System.currentTimeMillis();
     }
@@ -24,6 +25,7 @@ public abstract class MiniTwitComponent implements MiniTwitElement {
         throw new UnsupportedOperationException("Operation not supported by this component.");
     }
     
+    //getter for the creation timestamp
     public long getCreationTime(){
         return creationTime;
     }

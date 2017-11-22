@@ -12,16 +12,15 @@ import java.util.List;
 //recursive fashion), acting in the composite role for this pattern implementation (rather than the leaf role filled by the User class). 
 //Any Group object can traverse its portion of the sub-tree using the "getChild" method, and if the group is the root of the tree then 
 //it can traverse the entire tree.
+//Note that the creation time attribute is part of the parent abstract class and is set by calling super() in the constructor
 public class Group extends MiniTwitComponent {
 
     private String myID;
     private List<MiniTwitComponent> componentList;
-    //private long creationTime;
 
     //Constructor
     public Group(String myID) {
         super(); //call abstract constructor which sets creation time
-        //creationTime = System.currentTimeMillis();
         this.myID = myID;
         componentList = new ArrayList();
     }
