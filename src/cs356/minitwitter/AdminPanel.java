@@ -1,6 +1,6 @@
 //Author: Christopher Kilian
 //CS 356
-//Project #2 - Mini-Twitter
+//Project #3 - Mini-Twitter 2.0
 package cs356.minitwitter;
 
 import javax.swing.ImageIcon;
@@ -192,6 +192,24 @@ public class AdminPanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(null, "The percentage of positive messages stored in the system is: "
                 + ((MiniTwitPosPercentVisitor) positivePercentageVisitor).getPositivePercentage());
     }
+    
+    //Method which handles the displaying of whether or not all the ID's are valid
+    //Instantiate an appropriate visitor object, and have it visit the controller (which will then handle
+    //all other visitations required). Finally display the results.
+    private void verifyIDHandler(){
+        MiniTwitVisitor validateVisitor = new MiniTwitValidateVisitor();
+        controller.accept(validateVisitor);
+        if(((MiniTwitValidateVisitor)validateVisitor).isItValid()){
+            JOptionPane.showMessageDialog(null, "The User and Group ID's are all valid! Congratulations!");
+        }else{
+            JOptionPane.showMessageDialog(null, "The User and Group ID's are not all valid! ID's must all be unique and not contain spaces!");
+        }
+    }
+    
+    
+    private void findLastUpdatedHandler(){
+        
+    }
 
     //Generated code for the panel is found beyond this point. Mostly just setting up the sub-panels, labels, and action listeners for the buttons.
     /**
@@ -214,6 +232,9 @@ public class AdminPanel extends javax.swing.JPanel {
         showGroupTotalButton = new javax.swing.JButton();
         showMessagesTotalButton = new javax.swing.JButton();
         showPosPercentButton = new javax.swing.JButton();
+        newButtonsPanel = new javax.swing.JPanel();
+        verifyIDButton = new javax.swing.JButton();
+        lastUpdatedButton = new javax.swing.JButton();
 
         userIDField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         userIDField.setToolTipText("Enter User ID to create");
@@ -294,6 +315,26 @@ public class AdminPanel extends javax.swing.JPanel {
         });
         miscFuncPanel.add(showPosPercentButton);
 
+        newButtonsPanel.setLayout(new java.awt.GridLayout(1, 2, 10, 10));
+
+        verifyIDButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        verifyIDButton.setText("Verify User/Group ID's");
+        verifyIDButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifyIDButtonActionPerformed(evt);
+            }
+        });
+        newButtonsPanel.add(verifyIDButton);
+
+        lastUpdatedButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        lastUpdatedButton.setText("Find Last Updated User");
+        lastUpdatedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lastUpdatedButtonActionPerformed(evt);
+            }
+        });
+        newButtonsPanel.add(lastUpdatedButton);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -303,8 +344,9 @@ public class AdminPanel extends javax.swing.JPanel {
                 .addComponent(treeScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(miscFuncPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(groupIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -313,9 +355,9 @@ public class AdminPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(addUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(addGroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(openUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(miscFuncPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(openUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(newButtonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -331,9 +373,11 @@ public class AdminPanel extends javax.swing.JPanel {
                     .addComponent(addGroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(openUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(120, 120, 120)
-                .addComponent(miscFuncPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(newButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(miscFuncPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                .addGap(31, 31, 31))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(treeScrollPane)
@@ -380,12 +424,22 @@ public class AdminPanel extends javax.swing.JPanel {
         positiveMessageHandler();
     }//GEN-LAST:event_showPosPercentButtonActionPerformed
 
+    private void verifyIDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyIDButtonActionPerformed
+        verifyIDHandler();
+    }//GEN-LAST:event_verifyIDButtonActionPerformed
+
+    private void lastUpdatedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastUpdatedButtonActionPerformed
+        findLastUpdatedHandler();
+    }//GEN-LAST:event_lastUpdatedButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addGroupButton;
     private javax.swing.JButton addUserButton;
     private javax.swing.JTextField groupIDField;
+    private javax.swing.JButton lastUpdatedButton;
     private javax.swing.JPanel miscFuncPanel;
+    private javax.swing.JPanel newButtonsPanel;
     private javax.swing.JButton openUserButton;
     private javax.swing.JButton showGroupTotalButton;
     private javax.swing.JButton showMessagesTotalButton;
@@ -393,5 +447,6 @@ public class AdminPanel extends javax.swing.JPanel {
     private javax.swing.JButton showUserTotalButton;
     private javax.swing.JScrollPane treeScrollPane;
     private javax.swing.JTextField userIDField;
+    private javax.swing.JButton verifyIDButton;
     // End of variables declaration//GEN-END:variables
 }

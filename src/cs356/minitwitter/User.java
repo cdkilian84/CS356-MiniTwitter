@@ -1,6 +1,6 @@
 //Author: Christopher Kilian
 //CS 356
-//Project #2 - Mini-Twitter
+//Project #3 - Mini-Twitter 2.0
 package cs356.minitwitter;
 
 import java.util.ArrayList;
@@ -25,15 +25,18 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
     private List<String> tweets; 
     private DefaultListModel myTweetListModel; //allows easy access by a display element to view the list of tweets
     private DefaultListModel myFollowingListModel; //allows easy access by a display element to view the list of users being followed
+    private long lastUpdateTime; //holds the last time (in milliseconds) this user was updated (posted or received a tweet)
     
     //Constructor
     public User(String myID) {
+        super(); //call abstract constructor which sets creation time
         this.myID = myID;
         myFollowers = new ArrayList<>();
         following = new ArrayList<>();
         tweets = new ArrayList<>();
         myTweetListModel = new DefaultListModel();
         myFollowingListModel = new DefaultListModel();
+        lastUpdateTime = 0; //initialize updated time to 0 --> not "updated" until a tweet is posted/received
     }
 
     //Tell a User object to follow another User object. The passed value is the User to be followed by the User
@@ -57,6 +60,7 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
     public void postTweet(String tweet){
         String theTweet = this.myID + ": " + tweet;
         tweets.add(theTweet);
+        lastUpdateTime = System.currentTimeMillis(); //this user is "updated" when they post a tweet
         myTweetListModel.addElement(theTweet);
         notifyObservers(theTweet);
     }
@@ -101,6 +105,7 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
     @Override
     public void update(String theTweet) {
         tweets.add(theTweet);
+        lastUpdateTime = System.currentTimeMillis(); //this user is "updated" when they receive a tweet
         myTweetListModel.addElement(theTweet);
     }
     
@@ -141,6 +146,11 @@ public class User extends MiniTwitComponent implements MiniTwitSubject, MiniTwit
     @Override
     public String getMyID() {
         return myID;
+    }
+    
+    //getter for the last updated time
+    public long getLastUpdatedTime(){
+        return lastUpdateTime;
     }
 
     //Implementation of "print" which allows output to command line of tree structure

@@ -1,8 +1,11 @@
 //Author: Christopher Kilian
 //CS 356
-//Project #2 - Mini-Twitter
+//Project #3 - Mini-Twitter 2.0
 package cs356.minitwitter;
 
+import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
@@ -16,35 +19,50 @@ public class UserPanel extends javax.swing.JPanel {
     private MiniTwitComponent myUser; //the local reference to the User which corresponds to this panel (instantiated on construction)
     private JList followingViewList; //the lists which will display User information
     private JList tweetViewList;
-    
+
     //Constructor for panel
     public UserPanel(MiniTwitComponent user) {
         this.myUser = user;
         controller = AdminControl.getInstance();
         initComponents();
         initListViews();
+        initTimes();
+    }
+    
+    //Method which initializes the timestamp labels on the panel to display creation time and the last updated time
+    private void initTimes() {
+        Date creationTime = new Date(myUser.getCreationTime());
+        creationTimeLabel.setText("Creation date/time: " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(creationTime));
+        if (((User) myUser).getLastUpdatedTime() != 0) {
+            Date updatedTime = new Date(((User)myUser).getLastUpdatedTime());
+            updatedTimeLabel.setText("Last Updated: " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(updatedTime));
+        } else {
+            updatedTimeLabel.setText("Last Updated: Never!");
+        }
+
     }
 
     //Method to initialize the JList views using the models stored by the User object
-    private void initListViews(){
-        tweetViewList = new JList(((User)myUser).getMyTweetListModel());
-        followingViewList = new JList(((User)myUser).getMyFollowingListModel());
+    private void initListViews() {
+        tweetViewList = new JList(((User) myUser).getMyTweetListModel());
+        followingViewList = new JList(((User) myUser).getMyFollowingListModel());
         tweetScrollPane.setViewportView(tweetViewList);
         followingScrollPane.setViewportView(followingViewList);
+        
     }
-    
+
     //Handler method for posting tweets. Gets the contents of the tweet text area, and if it's empty
     //notifies the user that they can't post an empty tweet. Otherwise, passes the gathered text to the User's
     //"postTweet" method and clears the tweet text area for another tweet.
-    private void postTweetHandler(){
-        if(!tweetTextArea.getText().isEmpty()){
-            ((User)myUser).postTweet(tweetTextArea.getText());
+    private void postTweetHandler() {
+        if (!tweetTextArea.getText().isEmpty()) {
+            ((User) myUser).postTweet(tweetTextArea.getText());
             tweetTextArea.setText("");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Can't post an empty tweet! You need to have something to say!");
         }
     }
-    
+
     //Handler method for following another User with the specified ID. 
     //Gets the contents of the User ID text field and checks that it meets a number of criteria in order
     //to follow. First checks for an empty field (notifies user if it's empty), next checks if the specified User
@@ -52,31 +70,30 @@ public class UserPanel extends javax.swing.JPanel {
     //User since only User's can be followed), and finally checks to see if this User is already following the indicated
     //User (notifies if they are). Assuming all of these checks are passed, then finally the "followUser" method for this
     //User is called.
-    private void followUserHandler(){
-        if(!toFollowField.getText().isEmpty()){
+    private void followUserHandler() {
+        if (!toFollowField.getText().isEmpty()) {
             String theID = toFollowField.getText();
             toFollowField.setText("");
             MiniTwitComponent toFollow = controller.getComponent(theID);
-            if(toFollow != null){
-                if(toFollow instanceof User){
-                    if(!((User)myUser).getFollowingList().contains(toFollow)){
+            if (toFollow != null) {
+                if (toFollow instanceof User) {
+                    if (!((User) myUser).getFollowingList().contains(toFollow)) {
                         myUser.followUser(toFollow);
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null, "You're already following that user!");
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "I'm sorry, that ID is for a group and you can only follow Users.");
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "I'm sorry, that user does not exist.");
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "You must enter a user ID which you wish to follow!");
         }
     }
-    
+
     //Generated code for the panel is found beyond this point. Mostly just setting up the sub-panels, labels, and action listeners for the buttons.
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,6 +118,9 @@ public class UserPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         toFollowField = new javax.swing.JTextField();
         followUserButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        creationTimeLabel = new javax.swing.JLabel();
+        updatedTimeLabel = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(650, 580));
 
@@ -160,6 +180,16 @@ public class UserPanel extends javax.swing.JPanel {
         });
         followPanel.add(followUserButton);
 
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 5));
+
+        creationTimeLabel.setFont(new java.awt.Font("Century", 1, 12)); // NOI18N
+        creationTimeLabel.setText("Creation date/time:");
+        jPanel1.add(creationTimeLabel);
+
+        updatedTimeLabel.setFont(new java.awt.Font("Century", 1, 12)); // NOI18N
+        updatedTimeLabel.setText("Time last updated:");
+        jPanel1.add(updatedTimeLabel);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,9 +197,6 @@ public class UserPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tweetScrollPane)
@@ -180,25 +207,31 @@ public class UserPanel extends javax.swing.JPanel {
                             .addComponent(namePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tweetPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
-                    .addComponent(followPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(followPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(followPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(followingScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(followingScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tweetPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tweetScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addComponent(tweetScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -215,6 +248,7 @@ public class UserPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel creationTimeLabel;
     private javax.swing.JPanel followPanel;
     private javax.swing.JButton followUserButton;
     private javax.swing.JScrollPane followingScrollPane;
@@ -222,6 +256,7 @@ public class UserPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel namePanel;
@@ -230,5 +265,6 @@ public class UserPanel extends javax.swing.JPanel {
     private javax.swing.JPanel tweetPanel;
     private javax.swing.JScrollPane tweetScrollPane;
     private javax.swing.JTextArea tweetTextArea;
+    private javax.swing.JLabel updatedTimeLabel;
     // End of variables declaration//GEN-END:variables
 }
